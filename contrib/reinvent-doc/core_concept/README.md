@@ -27,7 +27,7 @@ Two methods can be used independently or in sequence:
 - **Reinforcement Learning (RL)**: iteratively updates the agent using a scoring function as reward signal.
 
 ![Chemical space exploration](../asset/chemspace_exploration.webp)
-*Left: the prior samples broadly across chemical space. Middle: TL narrows the distribution toward a target region. Right: RL concentrates sampling on high-scoring molecules within that region. Taken from Loeffler et al., J. Cheminformatics (2024).*
+*Left: the prior samples broadly across chemical space. Middle: TL narrows the distribution toward a target region. Right: RL concentrates sampling on high-scoring molecules within that region. Taken from Loeffler et al., J. Cheminformatics (2024) under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).*
 
 ## Staged Learning / Curriculum Learning
 
@@ -42,7 +42,7 @@ The scoring function is a weighted combination of components, each computing a p
 RL naturally drives the agent toward high-scoring regions, but without any check it tends to collapse onto a small set of structurally similar molecules, the same scaffold repeated across the batch (see Figure below). This is undesirable in drug discovery, where we want to explore diverse chemotypes that satisfy the same objective. REINVENT4 addresses this with two mechanisms:
 
 ![Overview](../asset/figure_opt.png)
-*An example of evolution of molecular optimization and diversity during reinforcement learning. Taken from Azzouzi M., Worakul T., et al., Digit. Discov. (2026)*
+*An example of evolution of molecular optimization and diversity during reinforcement learning. Taken from Azzouzi M., Worakul T., et al., Digit. Discov. (2026) under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/)*
 
 
 REINVENT4 addresses this at two levels:

@@ -5,8 +5,8 @@ import sys
 
 # -- Project information -------------------------------------------------------
 project = "REINVENT4"
-copyright = "2024, Molecular AI, AstraZeneca"
-author = "Molecular AI, AstraZeneca"
+author = "T. Worakul, EPFL"
+copyright = f"2024, Molecular AI, AstraZeneca | {author}"
 release = "4.0"
 
 # -- General configuration -----------------------------------------------------
