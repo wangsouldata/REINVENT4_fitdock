@@ -19,11 +19,9 @@ class TestDecoratorModel(unittest.TestCase):
         scaffold_list_2 = [input_scaffold, input_scaffold]
         scaffold_list_3 = [input_scaffold, input_scaffold, input_scaffold]
         self._model_regime = ModelModeEnum()
-            
+
         save_dict = torch.load(
-            self.json_config["LIBINVENT_CHEMBL_PRIOR_PATH"],
-            map_location="cpu",
-            weights_only=False
+            self.json_config["LIBINVENT_CHEMBL_PRIOR_PATH"], map_location="cpu", weights_only=False
         )
         self._decorator = DecoratorModel.create_from_dict(
             save_dict,

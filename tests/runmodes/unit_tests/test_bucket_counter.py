@@ -15,10 +15,9 @@ def test_bucket_full(bucket_counter):
     assert bucket_counter.bucket_full("C")
 
 
-@pytest.mark.xfail
-def test_bucket_full_fail(bucket_counter):
-    assert bucket_counter.bucket_full("B")
-    assert bucket_counter.bucket_full("D")
+def test_bucket_not_full(bucket_counter):
+    assert not bucket_counter.bucket_full("B")
+    assert not bucket_counter.bucket_full("D")
 
 
 def test_full_buckets(bucket_counter):

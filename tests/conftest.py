@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import pytest
+import torch
 
 from reinvent import models
 
@@ -15,15 +16,33 @@ from reinvent import models
 sys.modules["reinvent.models.mol2mol.models.vocabulary"] = models.transformer.core.vocabulary
 
 
+def _device_available(device: str) -> bool:
+    """Return True if the requested torch device is usable on this machine."""
+    if device == "cpu":
+        return True
+    if device == "cuda":
+        return torch.cuda.is_available()
+    if device == "mps":
+        return torch.backends.mps.is_available()
+    if device == "xpu":
+        return hasattr(torch, "xpu") and torch.xpu.is_available()
+    return False
+
+
 def pytest_addoption(parser):
     """Command line parsing for pytest
 
     Use e.g. like
-    $ pytest [pytest parameters and options] --device cpu
+    $ pytest [pytest parameters and options] --device cuda
+    $ pytest [pytest parameters and options] --device mps
+    $ pytest [pytest parameters and options] --device xpu
     """
 
     parser.addoption(
-        "--device", default="cuda", choices=["cuda", "cpu"], help="set the torch device"
+        "--device",
+        default="cpu",
+        choices=["cuda", "cpu", "mps", "xpu"],
+        help="set the torch device",
     )
 
     parser.addoption(
@@ -31,6 +50,28 @@ def pytest_addoption(parser):
         default=os.environ.get("REINVENT_TEST_JSON"),  # FIXME: find a better mechanism
         help="JSON test " "configuration file",
     )
+
+
+def pytest_collection_modifyitems(config, items):
+    """Skip needs_gpu tests when the requested accelerator device is unavailable."""
+    device = config.getoption("--device")
+    if _device_available(device):
+        return
+    skip = pytest.mark.skip(reason=f"needs_gpu: '{device}' is not available on this machine")
+    for item in items:
+        if item.get_closest_marker("needs_gpu"):
+            item.add_marker(skip)
+
+
+@pytest.fixture(autouse=True)
+def reset_torch_default_device():
+    """Reset torch default device to CPU after each test.
+
+    Prevents torch.set_default_device() calls in one test from
+    corrupting the global state seen by subsequent tests.
+    """
+    yield
+    torch.set_default_device("cpu")
 
 
 @pytest.fixture

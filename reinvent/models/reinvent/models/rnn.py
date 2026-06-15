@@ -62,10 +62,11 @@ class RNN(tnn.Module):
             num_layers=self._num_layers,
             dropout=self._dropout,
             batch_first=True,
-            device=self.device,
         )
 
         self._linear = tnn.Linear(self._layer_size, voc_size)
+
+        self.to(self.device)
 
     def forward(
         self,

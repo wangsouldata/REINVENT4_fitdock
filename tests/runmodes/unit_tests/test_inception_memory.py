@@ -5,7 +5,6 @@ import numpy as np
 
 from reinvent.runmodes.RL.memories.inception import Inception
 
-
 SMILIES = (
     "CCN(CC(=O)Nc1ccc(S(N)(=O)=O)cc1)CC(=O)Nc1ccccc1OC",
     "CC(c1nnnn1C)N(C)C1CCN(CCn2cccn2)CC1",
@@ -31,6 +30,7 @@ SMILIES = (
 
 SAMPLE_SIZE = 4
 MEMORY_SIZE = len(SMILIES)
+
 
 @pytest.fixture
 def inception_memory():

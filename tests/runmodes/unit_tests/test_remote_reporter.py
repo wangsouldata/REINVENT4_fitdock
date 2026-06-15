@@ -1,19 +1,28 @@
 import pytest
 
+import reinvent.utils.logmon as logmon
 from reinvent.utils.logmon import RemoteJSONReporter, get_reporter, setup_reporter
+
+
+@pytest.fixture(autouse=True)
+def reset_reporter():
+    """Reset the module-level reporter before and after each test."""
+    logmon._reporter = None
+    yield
+    logmon._reporter = None
 
 
 def test_noop_reporter_without_setup():
     remote_reporter = get_reporter()
 
-    assert remote_reporter == None
+    assert remote_reporter is None
 
 
 def test_noop_reporter_with_setup():
     setup_reporter(url=None, token=None)
     remote_reporter = get_reporter()
 
-    assert remote_reporter == None
+    assert remote_reporter is None
 
 
 def test_reporter_is_json_reporter():

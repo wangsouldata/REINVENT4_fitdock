@@ -32,7 +32,10 @@ def load_tb_data(wd, prefix="tb_"):
             break
 
     if not events_filename:
-        return
+        raise FileNotFoundError(
+            f"No TensorBoard events file found under '{wd}/{prefix}*'. "
+            "Make sure the RL run has completed before loading TB data."
+        )
 
     ea = event_accumulator.EventAccumulator(
         events_filename,
@@ -92,7 +95,7 @@ def get_image(ea):
     return img
 
 
-def create_mol_grid(df, cols=[], smiles_col="SMILES", transform={}):
+def create_mol_grid(df, cols=None, smiles_col="SMILES", transform={}):
     """Create a mol2grid grid
 
     :param df: Pandas DataFrame with SMILES and other data
@@ -102,11 +105,14 @@ def create_mol_grid(df, cols=[], smiles_col="SMILES", transform={}):
     :returns: a mol view
     """
 
-    subset = ["img"].append(cols)
+    if cols:
+        subset = ['img'].append(cols)
+    else:
+        subset = ['img']
 
-    mol_grid = mols2grid.MolGrid(df, smiles_col=smiles_col, useSVG=True, size=(150, 150))
-    mol_view = mol_grid.display(
-        subset=subset, n_rows=5, n_cols=6, selection=False, transform=transform
-    )
+    mol_view = mols2grid.display(df, subset=subset, smiles_col=smiles_col,
+                                 n_rows=5, n_cols=6,
+                                 selection=False, transform=transform,
+                                 useSVG=True, size=(150, 150))
 
     return mol_view

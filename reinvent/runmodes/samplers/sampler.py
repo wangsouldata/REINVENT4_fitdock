@@ -14,7 +14,7 @@ FIXME: The alternative would be to remove this class and use a simple strategy
 
 from __future__ import annotations
 
-__all__ = ["Sampler", "remove_duplicate_sequences", "validate_smiles"]
+__all__ = ["Sampler", "validate_smiles"]
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from typing import List, Tuple, TYPE_CHECKING
@@ -44,52 +44,10 @@ class Sampler(ABC):
     sample_strategy: str = "multinomial"  # Transformer-based models
     isomeric: bool = False  # Transformer-based models
     randomize_smiles: bool = True
-    unique_sequences: bool = False  # backwards compatibility for R3
 
     @abstractmethod
     def sample(self, smilies: List[str]) -> SampleBatch:
         """Use provided SMILES list for sampling"""
-
-
-def remove_duplicate_sequences(
-    sampled: SampleBatch, is_reinvent: bool = False, is_mol2mol: bool = False
-):
-    """Remove duplicate sequences/SMILES
-
-    This operates on the SMILES directly sampled from the model.  This means
-    that not all duplicates will be removed here because the model can
-    generated the same molecule with a different sequences.
-
-    We keep this for backward compatibility with R3.
-
-    :param sampled: sampled results from the model
-    :param is_reinvent: whether the model is Reinvent
-    :param is_mol2mol: whether the model is Mol2Mol
-    """
-
-    orig_len = len(sampled.output)
-
-    if is_reinvent or is_mol2mol:
-        seq_string = np.array(sampled.output)
-    else:
-        seq_string = np.array([f"{a}{b}" for a, b in zip(sampled.input, sampled.output)])
-
-    # order shouldn't matter here
-    smilies, uniq_idx = np.unique(seq_string, return_index=True)
-
-    if sampled.items1:
-        sampled.items1 = np.array(sampled.items1)
-        sampled.items1 = list(sampled.items1[uniq_idx])
-
-    sampled.output = list(smilies)
-    sampled.nlls = sampled.nlls[uniq_idx]
-    sampled.items2 = list(np.array(sampled.items2)[uniq_idx])
-    sampled.input = sampled.items1
-
-    if orig_len > len(sampled.output):
-        logger.debug(f"Removed {orig_len - len(sampled.output)} duplicate sequences")
-
-    return sampled
 
 
 def validate_smiles(

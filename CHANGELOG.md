@@ -3,12 +3,236 @@
 This follows the guideline on [keep a changelog](https://keepachangelog.com/)
 
 
+## [4.8.24] 2026-06-10
+
+### Added
+
+- Better hardware reporting (accelarator)
+
+
+## [4.8.23] 2026-06-10
+
+### Changed
+
+- Removed obsolete features: use_cuda, unique_sequence
+
+
+## [4.8.22] 2026-06-03
+
+### Changed
+
+- Massively expanded unit and integration tests
+
+
+## [4.8.21] 2026-06-02
+
+### Changed
+
+- Updated dependencies
+
+
+## [4.8.20] 2026-06-02
+
+### Changed
+
+- Significant updates of notebooks and alignment with ChemProp2
+
+
+## [4.8.19] 2026-06-02
+
+### Changed
+
+- Significant updates of documentation in the markdown files in configs/
+
+
+## [4.8.18] 2026-06-01
+
+### Changed
+
+- Removed tomli dependency and replaced by built-in tomllib
+
+
+## [4.8.17] 2026-05-29
+
+### Fixed
+
+- MacOS support for some Apple GPUs (see PyTorch documentation for which ones)
+
+
+## [4.8.16] 2026-05-21
+
+### Fixed
+
+- advanced some package versions to resolve security breaches
+
+
+## [4.8.15] 2026-05-21
+
+### Changed
+
+- refactored hardware reporting
+
+
+## [4.8.14] 2026-05-21
+
+### Fixed
+
+- optional Maize config and log
+
+
+## [4.8.13] 2026-05-21
+
+### Changed
+
+- support for chemistry for classical (RNN) Reinvent prior
+
+
+## [4.8.12] 2026-05-07
+
+### Added
+
+- log-level verbose for logging all sampled SMILES strings
+
+
+## [4.8.11] 2026-05-05
+
+### Fixed
+
+- When unique\_sequences=true, .output replaces .item2 which is otherwise just a reference
+
+
+## [4.8.10] 2026-05-04
+
+### Added
+
+- Support for uv
+
+
+## [4.8.9] 2026-04-14
+
+### Added
+
+- Reagents metadata from the Synthsense SFScore endpoint 
+
+
+## [4.8.8] 2026-04-10
+
+### Fixed
+
+- ROCs return length safety for RDKit-valid, OE-invalid SMILES
+
+
+## [4.8.7] 2026-04-10
+
+### Added
+
+- Support for multi-task and multiple featurizers in the Chemprop2 component
+
+
+## [4.8.6] 2026-04-02
+
+### Added
+
+- Simplify tensorboard logging to write all logs to one file
+
+
+## [4.8.5] 2026-04-02
+
+### Added
+
+- Chemprop v2 scoring component
+
+
+## [4.8.4] 2026-04-01
+
+### Added
+
+- CAZP outputs are saved locally for each step 
+
+
+## [4.8.3] 2026-03-06
+
+### Added
+
+- Check if scoring component does not return scores for each SMILES
+
+
+## [4.8.2] 2026-02-26
+
+### Fixed
+
+- Improved metadata safety for Maize when execeptions occur in worfklow
+
+
+## [4.8.1] 2026-02-09
+
+### Added
+
+- Final RDKit conversion check in data pipeline
+
+
+## [4.8.0] 2026-02-03
+
+### Added
+
+- Peptide enumeration run mode
+
+
+## [4.7.22] 2026-01-21
+
+### Fixed
+
+- Expand bool variable in multi-process scoring
+
+
+## [4.7.21] 2026-01-21
+
+### Added
+
+- Report peak GPU memory usage
+
+
+## [4.7.20] 2026-01-12
+
+### Fixed
+
+- Documentation in ExternalProcess
+
+
+## [4.7.19] 2026-01-12
+
+### Fixed
+
+- Empty metadata bug in SmilesAssociatedComponentResults
+
+
+## [4.7.18] 2025-12-03
+
+### Change
+
+- Expanded matching substructure to take lists
+
+
+## [4.7.17] 2025-11-25
+
+### Added
+
+- Log elapsed days if more than one day
+
+
+## [4.7.16] 2025-11-24
+
+### Fixed
+
+- Cache which was always off
+
+
 ## [4.7.15] 2025-11-17
 
 ### Change
 
 - More robust way to detect legacy JSON from Maize
-￼
+
 
 ## [4.7.14] 2025-11-12
 

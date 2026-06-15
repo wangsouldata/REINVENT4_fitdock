@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 #
 # Installer for REINVENT4
 #
@@ -10,7 +10,7 @@
 import subprocess as sp
 import argparse
 
-OPTIONAL_DEPENDENCIES = ("all", "none", "openeye", "isim")
+OPTIONAL_DEPENDENCIES = ("all", "none", "openeye", "isim", "chemprop1", "chemprop2")
 OPENEYE_URL = "https://pypi.anaconda.org/OpenEye/simple"
 PYTORCH_BASE_URL = "https://download.pytorch.org/whl"
 
@@ -25,10 +25,18 @@ def main(args):
         print("Cannot have both 'none' and 'all' as packages")
         exit(1)
 
+    if "chemprop1" in packages and "chemprop2" in packages:
+        print("Cannot have both 'chemprop1' and 'chemprop2' as packages")
+        exit(1)
+
     if "none" in packages:
         extra_dependencies = ""
     elif "all" in packages:
-        extra_dependencies = "[all]"
+        if "chemprop1" in packages:
+            extra_dependencies = "[all,chemprop1]"
+        else:
+            extra_dependencies = "[all,chemprop2]"
+
         openeye_url = ["--extra-index-url", OPENEYE_URL]
     else:
         extra_dependencies = "[" + ",".join(packages) + "]"
@@ -51,7 +59,7 @@ def main(args):
     cmd.extend(openeye_url)
     final_cmd = list(filter(None, cmd))
 
-    print(" ".join(final_cmd))
+    print("Running installation command:", " ".join(final_cmd))
 
     if not args.dry_run:
         sp.run(final_cmd)

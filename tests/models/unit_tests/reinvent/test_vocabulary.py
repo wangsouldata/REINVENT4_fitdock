@@ -92,11 +92,14 @@ class TestVocabulary(unittest.TestCase):
         self.assertNotIn(idx4, self.voc)
 
     def test_len(self):
+        # SIMPLE_TOKENS has exactly 15 entries: $=0 ^=1 (=2 )=3 1=4 2=5 3=6 ==7 C=8 F=9 N=10 O=11 S=12 c=13 n=14
         self.assertEqual(len(self.voc), 15)
         self.assertEqual(len(Vocabulary()), 0)
 
     def test_encode(self):
+        # From SIMPLE_TOKENS: ^→1, C→8, $→0
         npt.assert_almost_equal(self.voc.encode(["^", "C", "C", "$"]), np.array([1, 8, 8, 0]))
 
     def test_decode(self):
+        # From SIMPLE_TOKENS: $→0, C→8, F→9, ^→1
         self.assertEqual(self.voc.decode(np.array([0, 8, 9, 8, 1])), ["$", "C", "F", "C", "^"])

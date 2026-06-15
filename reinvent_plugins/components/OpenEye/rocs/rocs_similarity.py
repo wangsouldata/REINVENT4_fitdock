@@ -171,6 +171,9 @@ class ROCSOverlay:
                     best_score_color=best_score_color,
                 )
                 outmols.append(outmol)
-                scores.append(best_score)
+            else:
+                best_score = 0.0
+
+            scores.append(best_score)
 
         return np.array(scores)

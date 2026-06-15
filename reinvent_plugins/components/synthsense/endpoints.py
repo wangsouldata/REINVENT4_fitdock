@@ -16,6 +16,16 @@ from reinvent_plugins.components.synthsense.tree_edit_distance import TED, route
 logger = logging.getLogger("reinvent")
 
 
+def _extract_leaf_smiles(tree: dict) -> list[str]:
+    """Extract SMILES of leaf nodes (starting materials) from a synthesis tree."""
+    def _iter_leaves(node: dict):
+        if node["type"] == "mol" and "children" not in node:
+            yield node
+        for child in node.get("children", []):
+            yield from _iter_leaves(child)
+    return [leaf.get("smiles", "") for leaf in _iter_leaves(tree)]
+
+
 @dataclass
 class Endpoint:
     """Base class for synthsense endpoints.
@@ -66,6 +76,15 @@ class SimpleTreeScoreEndpoint(Endpoint):
         """
         return np.nanmax(scores)
 
+    def best_tree_index(self, scores: list[float]) -> int:
+        """Return index of the best tree, consistent with best_score."""
+        best = self.best_score(scores)
+        for i, s in enumerate(scores):
+            if s == best:
+                return i
+        # all-NaN case
+        return 0
+
     def keep(self, tree: dict) -> bool:
         """Only keep solved trees by default."""
         return tree.get("metadata", {}).get("is_solved", False)
@@ -74,6 +93,17 @@ class SimpleTreeScoreEndpoint(Endpoint):
         """Default score if there are no trees for a molecule."""
         return 0.0
 
+    def tree_metadata(self, tree: dict) -> dict:
+        """Extract metadata from the best tree for a molecule.
+
+        Subclasses can override to customise what is recorded.
+        Default: starting-material SMILES (leaf nodes).
+        """
+        return {
+            "starting_materials": _extract_leaf_smiles(tree),
+            "route_signature": route_signature(tree),
+        }
+
     def get_scores(self, smilies: list[str], out: dict) -> np.ndarray:
         """Extract scores from AiZynthFinder output.
 
@@ -81,21 +111,38 @@ class SimpleTreeScoreEndpoint(Endpoint):
         removes trees that do not pass the filter,
         calculates scores for remaining trees using tree_score method,
         and chooses the best score for each molecule.
+
+        Metadata from the best tree is collected via tree_metadata()
+        and stored in self.metadata.
         """
 
         # Change from a flat list to a dict with smiles as keys.
         moltrees = {mol["target"]: mol["trees"] for mol in out["data"]}
 
+        self.metadata = {}
         ordered_scores = []
+        per_mol_metadata = []
+
         for smi in smilies:
             trees = moltrees.get(smi, [])
-            tree_scores = [self.tree_score(t) for t in trees if self.keep(t)]
+            kept_trees = [t for t in trees if self.keep(t)]
+            tree_scores = [self.tree_score(t) for t in kept_trees]
 
-            # Pick score of the best tree, as defined by endpoint aggregator.
-            # If there are no trees, return 0.
-            score = self.default_score() if len(tree_scores) == 0 else self.best_score(tree_scores)
+            if len(tree_scores) == 0:
+                score = self.default_score()
+                per_mol_metadata.append({})
+            else:
+                best_idx = self.best_tree_index(tree_scores)
+                score = tree_scores[best_idx]
+                per_mol_metadata.append(self.tree_metadata(kept_trees[best_idx]))
 
             ordered_scores.append(score)
+
+        # Pivot list-of-dicts into dict-of-lists for ComponentResults.metadata
+        all_keys = {k for m in per_mol_metadata for k in m}
+        self.metadata = {
+            k: [m.get(k) for m in per_mol_metadata] for k in all_keys
+        }
 
         return np.array(ordered_scores)
 
@@ -221,7 +268,7 @@ class SFScore(SimpleTreeScoreEndpoint):
         the value for trees that were not solved might be misleading.
         """
         return True
-    
+
 @dataclass
 class RouteSimilarityEndpoint(SimpleTreeScoreEndpoint):
     """

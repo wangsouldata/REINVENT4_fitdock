@@ -5,6 +5,7 @@ Reads in a SMILES file and performs transfer learning.
 
 import os
 import logging
+from functools import partial
 
 import torch
 import torch.optim as topt
@@ -61,11 +62,12 @@ def run_transfer_learning(
     # FIXME: move to preprocessing
     if model_type == "Reinvent":
         if do_standardize:
-            standardizer = RDKitStandardizer(None, isomeric=False)
+            standardizer = RDKitStandardizer(None, isomeric=parameters.isomeric_smiles)
             actions.append(standardizer.apply_filter)
 
         if do_randomize:
-            actions.append(conversions.randomize_smiles)
+            fct = partial(conversions.randomize_smiles, isomeric=parameters.isomeric_smiles)
+            actions.append(fct)
     elif model_type == "Mol2Mol":
         if do_standardize:
             actions.append(conversions.convert_to_standardized_smiles)
@@ -109,7 +111,7 @@ def run_transfer_learning(
             lr=lr_config.lr,
             betas=(lr_config.beta1, lr_config.beta2),
             eps=lr_config.eps,
-            capturable=str(device) != "cpu",  # workaround for pytorch 1.11
+            capturable=str(device).startswith("cuda"),  # workaround for pytorch 1.11
         )
 
         lr_step = (

@@ -10,6 +10,7 @@ from tests.test_data import SCAFFOLD_SUZUKI
 from tests.models.unit_tests.libinvent.RNN.fixtures import mocked_decorator_model
 
 
+@pytest.mark.needs_gpu
 @pytest.mark.usefixtures("device")
 class TestDecoratorModel(unittest.TestCase):
     def setUp(self):

@@ -19,7 +19,9 @@ class TestPairedDataset(unittest.TestCase):
         self.smiles_input = [ETHANE, PROPANE]
         self.smiles_output = [HEXANE, BUTANE]
 
-        save_dict = torch.load(self.json_config["MOLFORMER_PRIOR_PATH"], weights_only=False)
+        save_dict = torch.load(
+            self.json_config["MOLFORMER_PRIOR_PATH"], map_location=self.device, weights_only=False
+        )
         model = Mol2MolModel.create_from_dict(save_dict, "inference", torch.device(self.device))
         set_torch_device(self.device)
 
@@ -89,7 +91,9 @@ class TestPairedDataset(unittest.TestCase):
             result.append(list(en_input))
 
         max_length = max(len(lst) for lst in result)
-        padded_result = [lst + [self.vocabulary.pad_token] * (max_length - len(lst)) for lst in result]
+        padded_result = [
+            lst + [self.vocabulary.pad_token] * (max_length - len(lst)) for lst in result
+        ]
         return padded_result
 
     def test_src_shape(self):
@@ -129,9 +133,7 @@ class TestPairedDataset(unittest.TestCase):
         result = self._get_trg()
         comparison = torch.equal(
             result,
-            torch.tensor(self._get_content(self.smiles_output)).to(
-                self.device
-            ),
+            torch.tensor(self._get_content(self.smiles_output)).to(self.device),
         )
         self.assertTrue(comparison)
 

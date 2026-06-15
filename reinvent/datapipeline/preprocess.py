@@ -4,8 +4,10 @@
 Assumes correct SMILES syntax e.g. that elements other than the basic ones are
 in brackets.
 """
+
 import os
 import argparse
+import tomllib
 import pathlib
 import json
 import datetime
@@ -14,7 +16,6 @@ from collections import Counter
 import logging
 import logging.handlers
 
-import tomli
 from rdkit import rdBase
 import polars as pl
 from tqdm import tqdm
@@ -29,7 +30,6 @@ from reinvent.datapipeline.filters import (
 from reinvent.datapipeline.logger import setup_sp_logger, setup_mp_logger, logging_listener
 from reinvent.datapipeline.validation import DPLConfig
 from reinvent.datapipeline import normalizer
-
 
 rdBase.DisableLog("rdApp.*")
 
@@ -63,7 +63,7 @@ def parse_command_line():
 def main(args):
 
     with open(args.config_filename, "rb") as tf:
-        cfg = tomli.load(tf)
+        cfg = tomllib.load(tf)
 
     config = DPLConfig(**cfg)
     level = logging.INFO

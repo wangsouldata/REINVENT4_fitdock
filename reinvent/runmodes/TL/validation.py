@@ -23,6 +23,7 @@ class SectionParameters(GlobalConfig):
     standardize_smiles: bool = True
     randomize_smiles: bool = True
     randomize_all_smiles: bool = False
+    isomeric_smiles: bool = False
     internal_diversity: bool = False
     # learning_rate_scheduler: Optional[str] = 'StepLR'
     # optimizer: Optional[str] = 'Adam'

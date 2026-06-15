@@ -18,10 +18,11 @@ class Dataset(tud.Dataset):
 
         return super().__new__(cls)
 
-    def __init__(self, smiles_list, vocabulary, tokenizer, randomize=False):
+    def __init__(self, smiles_list, vocabulary, tokenizer, randomize=False, isomeric=False):
         self._vocabulary = vocabulary
         self._tokenizer = tokenizer
         self._smiles_list = list(smiles_list)
+        self._isomeric = isomeric
 
     def _getitem(self, i):
         smiles = self._smiles_list[i]
@@ -31,7 +32,7 @@ class Dataset(tud.Dataset):
         return torch.tensor(encoded, dtype=torch.long)
 
     def _getitem_with_randomization(self, i):
-        smiles = conversions.randomize_smiles(self._smiles_list[i])
+        smiles = conversions.randomize_smiles(self._smiles_list[i], isomeric=self._isomeric)
         tokens = self._tokenizer.tokenize(smiles)
         encoded = self._vocabulary.encode(tokens)
 

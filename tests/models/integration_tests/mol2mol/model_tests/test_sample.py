@@ -17,7 +17,9 @@ from tests.test_data import METAMIZOLE, COCAINE, AMOXAPINE
 class TestModelSampling(unittest.TestCase):
     def setUp(self):
 
-        save_dict = torch.load(self.json_config["MOLFORMER_PRIOR_PATH"], weights_only=False)
+        save_dict = torch.load(
+            self.json_config["MOLFORMER_PRIOR_PATH"], map_location=self.device, weights_only=False
+        )
         model = Mol2MolModel.create_from_dict(save_dict, "inference", torch.device(self.device))
         set_torch_device(self.device)
 

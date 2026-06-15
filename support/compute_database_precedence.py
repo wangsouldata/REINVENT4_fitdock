@@ -1,7 +1,7 @@
-# this script reads in a csv file containing smiles (in "smiles_column") and enumerates ring systems and their precdence,
-# resultsing in a .json database that can be used in the "comp_ringprecedence" scoring component
+# this script reads in a csv file containing smiles (in "smiles_column") and enumerates ring systems and their precedence,
+# resulting in a .json database that can be used in the "comp_ringprecedence" scoring component
 # example use
-# python compute_database_precendence.py --dataset [CSV_FILE] --smiles_column SMILES --output_file ring_databse.json --num_cpus 4
+# python compute_database_precedence.py --dataset [CSV_FILE] --smiles_column SMILES --output_file ring_database.json --num_cpus 4
 
 import argparse
 import os

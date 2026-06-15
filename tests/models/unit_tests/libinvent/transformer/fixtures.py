@@ -6,8 +6,16 @@ from reinvent.models.transformer.core.vocabulary import build_vocabulary
 from reinvent.models.transformer.libinvent.libinvent import LibinventModel
 from reinvent.models import meta_data
 from tests.conftest import device
-from tests.test_data import SCAFFOLD_SINGLE_POINT, SCAFFOLD_DOUBLE_POINT, SCAFFOLD_TRIPLE_POINT, \
-    SCAFFOLD_QUADRUPLE_POINT, DECORATION_NO_SUZUKI, TWO_DECORATIONS_ONE_SUZUKI, THREE_DECORATIONS, FOUR_DECORATIONS
+from tests.test_data import (
+    SCAFFOLD_SINGLE_POINT,
+    SCAFFOLD_DOUBLE_POINT,
+    SCAFFOLD_TRIPLE_POINT,
+    SCAFFOLD_QUADRUPLE_POINT,
+    DECORATION_NO_SUZUKI,
+    TWO_DECORATIONS_ONE_SUZUKI,
+    THREE_DECORATIONS,
+    FOUR_DECORATIONS,
+)
 
 
 def _init_params(parameters):
@@ -38,8 +46,14 @@ def mocked_libinvent_model():
 
 def mocked_vocabulary():
     smiles_list = [
-        SCAFFOLD_SINGLE_POINT, SCAFFOLD_DOUBLE_POINT, SCAFFOLD_TRIPLE_POINT, SCAFFOLD_QUADRUPLE_POINT,
-        DECORATION_NO_SUZUKI, TWO_DECORATIONS_ONE_SUZUKI, THREE_DECORATIONS, FOUR_DECORATIONS
+        SCAFFOLD_SINGLE_POINT,
+        SCAFFOLD_DOUBLE_POINT,
+        SCAFFOLD_TRIPLE_POINT,
+        SCAFFOLD_QUADRUPLE_POINT,
+        DECORATION_NO_SUZUKI,
+        TWO_DECORATIONS_ONE_SUZUKI,
+        THREE_DECORATIONS,
+        FOUR_DECORATIONS,
     ]
     vocabulary = build_vocabulary(smiles_list)
 

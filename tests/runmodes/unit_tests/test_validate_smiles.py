@@ -69,3 +69,25 @@ def test_number_of_invalids(data):
 
     invalid = np.where(states == SmilesState.INVALID, True, False)
     assert sum(invalid) == 4
+
+
+def test_which_smiles_are_valid(data):
+    """The first 4 unique non-None SMILES are valid; duplicates and bad entries are not."""
+    smilies, mols = data
+
+    _, states = validate_smiles(mols, smilies)
+
+    # Indices from the fixture order:
+    # 0=PARACETAMOL valid, 1=INVALID invalid, 2=GENTAMICIN valid,
+    # 3=PROPANE valid, 4=CELECOXIB valid, 5=NONSENSE invalid,
+    # 6=GENTAMICIN dup, 7=PARACETAMOL dup, 8="CC=O-C" invalid, 9=None invalid
+    assert states[0] == SmilesState.VALID
+    assert states[1] == SmilesState.INVALID
+    assert states[2] == SmilesState.VALID
+    assert states[3] == SmilesState.VALID
+    assert states[4] == SmilesState.VALID
+    assert states[5] == SmilesState.INVALID
+    assert states[6] == SmilesState.DUPLICATE
+    assert states[7] == SmilesState.DUPLICATE
+    assert states[8] == SmilesState.INVALID
+    assert states[9] == SmilesState.INVALID

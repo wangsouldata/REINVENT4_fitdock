@@ -9,7 +9,12 @@ from reinvent.models.transformer.core.enums.sampling_mode_enum import SamplingMo
 from reinvent.models.transformer.core.vocabulary import SMILESTokenizer
 from reinvent.models.transformer.libinvent.libinvent import LibinventModel
 from reinvent.runmodes.utils.helpers import set_torch_device
-from tests.test_data import SCAFFOLD_SINGLE_POINT, SCAFFOLD_DOUBLE_POINT, SCAFFOLD_TRIPLE_POINT, SCAFFOLD_QUADRUPLE_POINT
+from tests.test_data import (
+    SCAFFOLD_SINGLE_POINT,
+    SCAFFOLD_DOUBLE_POINT,
+    SCAFFOLD_TRIPLE_POINT,
+    SCAFFOLD_QUADRUPLE_POINT,
+)
 
 
 @pytest.mark.integration
@@ -17,7 +22,9 @@ from tests.test_data import SCAFFOLD_SINGLE_POINT, SCAFFOLD_DOUBLE_POINT, SCAFFO
 class TestLibInventModel(unittest.TestCase):
     def setUp(self):
 
-        save_dict = torch.load(self.json_config["LIBINVENT_PRIOR_PATH"], map_location=self.device, weights_only=False)
+        save_dict = torch.load(
+            self.json_config["LIBINVENT_PRIOR_PATH"], map_location=self.device, weights_only=False
+        )
         self._model = LibinventModel.create_from_dict(
             save_dict, "inference", torch.device(self.device)
         )
@@ -34,7 +41,12 @@ class TestLibInventModel(unittest.TestCase):
         smiles_list = [SCAFFOLD_SINGLE_POINT, SCAFFOLD_DOUBLE_POINT, SCAFFOLD_TRIPLE_POINT]
         self.data_loader_3 = self.initialize_dataloader(smiles_list)
 
-        smiles_list = [SCAFFOLD_SINGLE_POINT, SCAFFOLD_DOUBLE_POINT, SCAFFOLD_TRIPLE_POINT, SCAFFOLD_QUADRUPLE_POINT]
+        smiles_list = [
+            SCAFFOLD_SINGLE_POINT,
+            SCAFFOLD_DOUBLE_POINT,
+            SCAFFOLD_TRIPLE_POINT,
+            SCAFFOLD_QUADRUPLE_POINT,
+        ]
         self.data_loader_4 = self.initialize_dataloader(smiles_list)
 
     def initialize_dataloader(self, data):

@@ -51,7 +51,7 @@ class Handler:
     def __enter__(self):
         """Set the signal handler
 
-        Catch SIGINT (Ctrl-C) and SIGQUIT (Ctrl-\).
+        Catch SIGINT (Ctrl-C) and SIGQUIT (Ctrl-\\).
 
         FIXME: need to replace this with a better signalling method
         """

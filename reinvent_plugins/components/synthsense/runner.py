@@ -49,6 +49,11 @@ def run_aizynth(smilies: list[str], params: ComponentLevelParameters, epoch: int
         stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR
     )
     os.chmod(tmpdir, permissions)
+    
+    # Create a directory to store all the json.gz
+    outdir = pathlib.Path(os.getcwd()) / "reinvent-aizynthfinder-outputs"
+    outdir.mkdir(exist_ok=True, parents=True)
+    os.chmod(outdir, permissions)
 
     ensure_custom_stock_is_inchikey(config, tmpdir)
 
@@ -66,6 +71,12 @@ def run_aizynth(smilies: list[str], params: ComponentLevelParameters, epoch: int
             f" Stderr:\n{result.stderr}"
         )
     out = json.loads(result.stdout)
+   
+    # Retaining outputs
+    for path in pathlib.Path(tmpdir).glob("*.json.gz"):
+        path_no_ext = path.with_suffix("").with_suffix("")
+        fname = f"{path_no_ext.name}-{epoch}.json.gz" 
+        shutil.copy(path, outdir / fname)
 
     # Temporary directory clenaup.
     is_debug = logger.level <= logging.DEBUG

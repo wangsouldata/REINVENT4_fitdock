@@ -12,6 +12,7 @@ from tests.models.unit_tests.pepinvent.fixtures import mocked_pepinvent_model
 from tests.test_data import PEPINVENT_INPUT1, PEPINVENT_INPUT2, PEPINVENT_INPUT3
 
 
+@pytest.mark.needs_gpu
 @pytest.mark.usefixtures("device")
 class TestPepInventModel(unittest.TestCase):
     def setUp(self):

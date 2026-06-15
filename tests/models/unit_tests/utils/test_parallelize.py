@@ -13,7 +13,7 @@ def sigmoid(data, *, weights):
 
 
 def test_parallel():
-    data = np.random.randn(1000)
+    data = np.random.default_rng(42).standard_normal(1000)
     w = 1.3
 
     res = sigmoid(data, weights=w)

@@ -27,6 +27,7 @@ except ImportError:
 
 from .reports import RLTBReporter, RLCSVReporter, RLRemoteReporter, RLReportData
 from reinvent.runmodes.RL.data_classes import ModelState
+from reinvent.utils.logmon import VERBOSE
 from reinvent.models.model_factory.sample_batch import SmilesState
 from reinvent.models.model_factory.model_adapter import SampledSequencesDTO
 from reinvent.utils import get_reporter
@@ -131,6 +132,11 @@ class Learning(ABC):
 
         for step in range(self.max_steps):
             self.sampled = self.sampling_model.sample(self.input_smilies)
+
+            if logger.isEnabledFor(VERBOSE):
+                for smi, state in zip(self.sampled.smilies, self.sampled.states):
+                    logger.verbose(f"{smi} | {state}")
+
             self.smiles_memory.update(self.sampled.smilies)  # NOTE: global -> only update here!
 
             self.invalid_mask = np.where(self.sampled.states == SmilesState.INVALID, False, True)
@@ -158,7 +164,7 @@ class Learning(ABC):
             else:
                 orig = []
 
-                for inp, outp, nll in zip(self.sampled.input, self.sampled.output, self.sampled.nlls):
+                for inp, outp, nll in zip(self.sampled.items1, self.sampled.items2, self.sampled.nlls):
                     orig.append(SampledSequencesDTO(inp, outp, nll))
 
             agent_lls, prior_lls, augmented_nll, loss = self.update(results, orig)
@@ -178,7 +184,7 @@ class Learning(ABC):
                 agent_lls=agent_lls,
                 prior_lls=prior_lls,
                 augmented_nll=augmented_nll,
-                loss=float(loss),
+                loss=loss.item(),
             )
 
             if converged(mean_scores, step):

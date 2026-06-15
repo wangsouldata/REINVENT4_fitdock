@@ -2,7 +2,6 @@ import numpy as np
 
 from reinvent_plugins.components.RDKit.comp_tpsa import TPSA, Parameters
 
-
 smilies = (
     "Cc1[nH]c(=O)[nH]c(=S)c1C(=O)NC(C)(CO)CO",
     "CC(c1cccc(F)n1)c1c(CCN(C)C)sc2ccccc12",

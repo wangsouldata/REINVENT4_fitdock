@@ -28,6 +28,7 @@ def intrinsic_penalty(device, json_config, request):
     pass  # no tear-down
 
 
+@pytest.mark.integration
 def test_filter(intrinsic_penalty):
     scores = [0.64, 0.55, 0.897, 0.737]
     smilies = ["CCc1ccccc1", "CCC=O=O", "CCCCc1ccccc1", "CCc1cnccc1"]

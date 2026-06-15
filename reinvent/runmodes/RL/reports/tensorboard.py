@@ -23,6 +23,16 @@ class RLTBReporter:
     def __init__(self, reporter):
         self.reporter = reporter
 
+        layout = {
+            "Loss (likelihood averages)": {
+                "Loss (likelihood averages)": [
+                    "Multiline",
+                    ["NLL/prior", "NLL/agent", "NLL/augmented"],
+                ]
+            }
+        }
+        self.reporter.add_custom_scalars(layout)
+
     def submit(self, data: RLReportData) -> None:
         """Write out TensorBoard data
 
@@ -59,17 +69,9 @@ class RLTBReporter:
 
         self.reporter.add_scalar(f"Loss", data.loss, step)
 
-        # NOTE: for some reason this breaks on Windows because the necessary
-        #       subdirectory cannot be created
-        self.reporter.add_scalars(
-            "Loss (likelihood averages)",
-            {
-                "prior NLL": data.prior_mean_nll,
-                "agent NLL": data.agent_mean_nll,
-                "augmented NLL": data.augmented_mean_nll,
-            },
-            step,
-        )
+        self.reporter.add_scalar("NLL/prior", data.prior_mean_nll, step)
+        self.reporter.add_scalar("NLL/agent", data.agent_mean_nll, step)
+        self.reporter.add_scalar("NLL/augmented", data.augmented_mean_nll, step)
 
         self.reporter.add_scalar("Fraction of valid SMILES", data.fraction_valid_smiles, step)
         self.reporter.add_scalar(

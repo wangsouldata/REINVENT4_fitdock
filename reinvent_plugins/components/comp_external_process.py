@@ -68,7 +68,7 @@ class ExternalProcess:
     scores = model.predict_from_smiles(smilies)
     data = {"version": 1, "payload": {"predictions": list(scores)}}
 
-    print(json.dumps(list(scores)))
+    print(json.dumps(data))
     """
 
     def __init__(self, params: Parameters):

@@ -15,6 +15,7 @@ from tests.test_data import BENZENE, TOLUENE, ANILINE
 from tests.models.unit_tests.mol2mol.fixtures import mocked_mol2mol_model
 
 
+@pytest.mark.needs_gpu
 @pytest.mark.usefixtures("device")
 class TestSampleLikelihoodSMILES(unittest.TestCase):
     def setUp(self):

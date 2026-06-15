@@ -51,7 +51,7 @@ def test_complevel_params():
                         "name": "Endpoint1",
                         "weight": 0.5,
                         "params": {  # Endpoint-level params.
-                            "property": "Property 1",   # Endpoint key.
+                            "property": "Property 1",  # Endpoint key.
                         },
                     },
                     {
@@ -105,8 +105,8 @@ def test_complevel_params():
     assert "externalprocess" == components_dict.scorers[2].component_type
     name, comp, transform, weights = components_dict.scorers[2].params
     assert comp.properties == [
-        "Property 1", # From Endpoint1, inherited from component-level.
-        "Property 2", # From Endpoint2, overridden by endpoint.
+        "Property 1",  # From Endpoint1, inherited from component-level.
+        "Property 2",  # From Endpoint2, overridden by endpoint.
     ]
 
     assert not components_dict.filters

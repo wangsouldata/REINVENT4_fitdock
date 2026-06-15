@@ -1,15 +1,13 @@
 """Create a Reinvent model from a list of SMILES strings"""
 
 import sys
+import tomllib
 from dataclasses import asdict
 import time
 import datetime
 import uuid
 import pprint
 import logging
-
-import tomli
-
 
 try:
     import torchinfo
@@ -114,7 +112,7 @@ def get_config(filename):
     """Get the config from a TOML file"""
 
     with open(filename, "rb") as tf:
-        config = tomli.load(tf)
+        config = tomllib.load(tf)
 
     return config
 

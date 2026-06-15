@@ -18,7 +18,7 @@ class SectionParameters(GlobalConfig):
     distance_threshold: int = 99999  # Transformer
     batch_size: int = 100
     randomize_smiles: bool = True
-    unique_sequences: bool = False
+    isomeric_smiles: bool = False
     temperature: float = 1.0
     tb_isim: Optional[bool] = False  # Add iSIM tracking as optional parameter
 

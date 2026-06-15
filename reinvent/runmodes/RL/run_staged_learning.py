@@ -97,7 +97,7 @@ def run_staged_learning(
         smilies = config_parse.read_smiles_csv_file(parameters.smiles_file, 0, allowed_tokens)
         logger.info(f"Input molecules/fragments read from file {parameters.smiles_file}")
 
-    sampler, _ = setup_sampler(model_type, parameters.dict(), agent)
+    sampler, _ = setup_sampler(model_type, parameters.model_dump(), agent)
     reward_strategy = setup_reward_strategy(config.learning_strategy, agent)
 
     global_df_only = False
@@ -185,15 +185,6 @@ def run_staged_learning(
                 tb_isim=parameters.tb_isim,
                 intrinsic_penalty=intrinsic_penalty,
             )
-
-            if hasattr(torch, device.type) and device.type != "cpu":
-                gpu = getattr(torch, device.type)
-                free_memory, total_memory = gpu.mem_get_info()
-                free_memory //= 1024**2
-                used_memory = total_memory // 1024**2 - free_memory
-                logger.info(
-                    f"Current GPU memory usage: {used_memory} MiB used, {free_memory} MiB free"
-                )
 
             handler.out_filename = package.out_state_filename
             handler.register_callback(optimize.get_state_dict)

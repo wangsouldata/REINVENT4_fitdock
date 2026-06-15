@@ -88,6 +88,7 @@ class Learning(ABC):
         self.collate_fn = None
         self.dataset = None
         self.randomize_all_smiles = self._config.randomize_all_smiles
+        self.isomeric = self._config.isomeric_smiles
 
         model_type = model.model_type
 
@@ -107,7 +108,6 @@ class Learning(ABC):
 
         sampling_parameters = {"batch_size": sample_batch_size}
         sampler, _ = setup_sampler(model_type, sampling_parameters, self.model)
-        sampler.unique_sequences = False
 
         self.sampler = sampler
         self.sampling_smilies = random.choices(self.smilies, k=self._config.sample_batch_size)

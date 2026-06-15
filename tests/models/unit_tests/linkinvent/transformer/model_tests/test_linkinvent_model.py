@@ -12,6 +12,7 @@ from tests.models.unit_tests.linkinvent.transformer.fixtures import mocked_linki
 from tests.test_data import WARHEAD_PAIR, WARHEAD_TRIPLE, WARHEAD_QUADRUPLE
 
 
+@pytest.mark.needs_gpu
 @pytest.mark.usefixtures("device")
 class TestLinkInventModel(unittest.TestCase):
     def setUp(self):

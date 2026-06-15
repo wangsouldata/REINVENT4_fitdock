@@ -69,12 +69,15 @@ class SynthSense:
         out = run_aizynth(smilies, self.params_run, self.steps)
 
         all_scores = []
+        metadata = {}
 
         for endpoint in self.endpoints:
             scores = endpoint.get_scores(smilies, out)
             all_scores.append(scores)
+            if hasattr(endpoint, 'metadata') and endpoint.metadata:
+                metadata.update(endpoint.metadata)
 
-        return ComponentResults(scores=all_scores)
+        return ComponentResults(scores=all_scores, metadata=metadata or None)
 
 
 # for backward compatibility

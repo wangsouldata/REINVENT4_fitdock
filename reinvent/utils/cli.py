@@ -15,6 +15,7 @@ import torch
 
 from reinvent import version
 from reinvent.utils import config_parse
+from reinvent.utils.logmon import VERBOSE  # ensure custom level is registered before building choices
 
 RDKIT_CHOICES = ("all", "error", "warning", "info", "debug")
 LOGLEVEL_CHOICES = tuple(level.lower() for level in logging._nameToLevel.keys())

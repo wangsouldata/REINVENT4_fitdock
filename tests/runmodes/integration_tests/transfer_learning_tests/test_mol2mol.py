@@ -9,7 +9,6 @@ from reinvent.models.meta_data import check_valid_hash
 
 
 @pytest.fixture
-@pytest.mark.usefixtures("device")
 def setup(tmp_path, json_config, pytestconfig):
     device = pytestconfig.getoption("device")
     set_torch_device(device)

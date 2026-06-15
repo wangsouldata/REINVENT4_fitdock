@@ -25,9 +25,7 @@ class TestNonSelectiveReactionFilter(BaseTestReactionFilter):
     def test_with_suzuki_reagents(self):
         scaffold = SCAFFOLD_SUZUKI
         decoration = DECORATION_SUZUKI
-        scaffold = attachment_points.add_attachment_point_numbers(
-            scaffold, canonicalize=False
-        )
+        scaffold = attachment_points.add_attachment_point_numbers(scaffold, canonicalize=False)
         molecule: Chem.Mol = bond_maker.join_scaffolds_and_decorations(
             scaffold, decoration, keep_labels_on_atoms=True
         )
@@ -37,9 +35,7 @@ class TestNonSelectiveReactionFilter(BaseTestReactionFilter):
     def test_with_non_suzuki_reagents(self):
         scaffold = SCAFFOLD_NO_SUZUKI
         decoration = DECORATION_NO_SUZUKI
-        scaffold = attachment_points.add_attachment_point_numbers(
-            scaffold, canonicalize=False
-        )
+        scaffold = attachment_points.add_attachment_point_numbers(scaffold, canonicalize=False)
         molecule: Chem.Mol = bond_maker.join_scaffolds_and_decorations(
             scaffold, decoration, keep_labels_on_atoms=True
         )

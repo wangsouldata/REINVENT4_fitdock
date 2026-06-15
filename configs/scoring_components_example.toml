@@ -240,7 +240,7 @@ transform.k = 0.5
 [[scoring.component.MatchingSubstructure.endpoint]]
 name = "Matching SMARTs substructure"
 weight = 1
-params.smarts = "CO"
+params.smarts = "CO" # this can also be a list, e.g. ["CO", "CC"]
 params.use_chirality = false
 
 [[scoring.component]]

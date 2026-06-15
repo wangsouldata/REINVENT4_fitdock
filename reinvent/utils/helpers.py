@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 __all__ = [
-    "get_cuda_driver_version",
     "set_seed",
     "extract_sections",
     "write_json_config",
@@ -9,8 +8,6 @@ __all__ = [
 ]
 import os
 import random
-import subprocess as sp
-from typing import Optional
 import logging
 
 import numpy as np
@@ -19,33 +16,6 @@ import torch
 from reinvent.utils import config_parse
 
 logger = logging.getLogger(__name__)
-
-
-def get_cuda_driver_version() -> Optional[str]:
-    """Get the CUDA driver version via modinfo if possible.
-
-    This is for Linux only.
-
-    :returns: driver version or None
-    """
-
-    # Alternative
-    # result = sp.run(["/usr/bin/nvidia-smi"], shell=False, capture_output=True)
-    # if "Driver Version:" in str_line:
-    #    version = str_line.split()[5]
-
-    try:
-        result = sp.run(["/sbin/modinfo", "nvidia"], shell=False, capture_output=True)
-    except Exception:
-        return
-
-    for line in result.stdout.splitlines():
-        str_line = line.decode()
-
-        if str_line.startswith("version:"):
-            cuda_driver_version = str_line.split()[1]
-
-            return cuda_driver_version
 
 
 def set_seed(seed: int):

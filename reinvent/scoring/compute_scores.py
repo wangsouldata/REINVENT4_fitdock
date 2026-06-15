@@ -93,9 +93,23 @@ def compute_component_scores(
         index_smiles_to_score = smilies_to_score
         index_smiles_with_masked_scores = smiles_with_masked_scores
 
+    # debug statement here as invalids are passed in as "None" instead of smiles.
+    logger.debug(
+        f"Masked smilies for {type(scoring_function).__name__} are {smiles_with_masked_scores}"
+    )
+
     if len(smilies_to_score) > 0:
+        _results = scoring_function(smilies_to_score)
+
+        # FIXME: crash and burn because currently we have no way to recover from
+        #        this e.g. by setting the scores of missing SMILES to NaN
+        if len(_results.scores[0]) != len(smilies_to_score):
+            msg = f"Scoring component {scoring_function} has returned {len(_results.scores[0])} but expected {len(smilies_to_score)}"
+            logger.critical(msg)
+            raise RuntimeError(msg)
+
         component_results = SmilesAssociatedComponentResults(
-            component_results=scoring_function(smilies_to_score), smiles=index_smiles_to_score
+            component_results=_results, smiles=index_smiles_to_score
         )
 
         if use_cache:
@@ -155,10 +169,7 @@ def compute_transform(
         missing_scores = [smiles for smiles in index_smiles if smiles not in component_results.data]
     else:
         missing_scores = [smiles for smiles in smilies if smiles not in component_results.data]
-
     if missing_scores:
-        logger.debug(f"{cache=}")
-        logger.debug(f"{component_results.data.keys()=}")
         raise RuntimeError(f"Missing scores for {component_type} for {missing_scores}")
 
     for scores, transform in zip(

@@ -1,4 +1,3 @@
-import pytest
 import numpy.testing as npt
 
 from unittest.mock import mock_open, patch
@@ -8,7 +7,6 @@ from reinvent_plugins.components.database_precedence.comp_ringprecedence import 
 )
 
 
-@pytest.mark.integration
 def test_comp_ringprecedence():
     inputs = [
         "c1ccccc1Cc1ccccc1",
@@ -51,4 +49,3 @@ def test_comp_ringprecedence():
         npt.assert_array_equal(results.scores[0], expected_results)
         assert "highest_nll_ring" in results.metadata
         assert len(results.metadata["highest_nll_ring"]) == len(inputs)
-

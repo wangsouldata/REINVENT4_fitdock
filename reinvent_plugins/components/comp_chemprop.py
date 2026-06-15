@@ -26,6 +26,9 @@ from typing import List
 import logging
 
 import chemprop
+if chemprop.__version__.split(".")[0] != "1":
+    raise ImportError(f"only Chemprop v1 supported")
+
 import numpy as np
 from pydantic.dataclasses import dataclass
 

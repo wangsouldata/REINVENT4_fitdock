@@ -13,7 +13,6 @@ import numpy as np
 
 from reinvent_plugins.components.RDKit.comp_pmi import Parameters, PMI
 
-
 RTOL = 0.05  # this makes the tests fairly fragile
 
 
@@ -26,7 +25,9 @@ def test_comp_pmi_all():
     pmi = PMI(params)
     results = pmi(smiles)
 
-    assert np.allclose(results.scores, expected_results, rtol=RTOL) or np.allclose(results.scores, expected_results_rdkit_2025, rtol=RTOL)
+    assert np.allclose(results.scores, expected_results, rtol=RTOL) or np.allclose(
+        results.scores, expected_results_rdkit_2025, rtol=RTOL
+    )
 
 
 def test_comp_pmi_npr1():

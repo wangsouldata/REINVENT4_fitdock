@@ -4,38 +4,36 @@
 from __future__ import annotations
 import os
 import sys
+
 from dotenv import load_dotenv, find_dotenv
 import platform
 import getpass
 import datetime
 from typing import Any
 
+from rdkit import rdBase
+import rdkit
+import torch
+
 from reinvent.utils import (
     parse_command_line,
-    get_cuda_driver_version,
     set_seed,
     extract_sections,
     write_json_config,
     enable_rdkit_log,
     setup_responder,
     config_parse,
+    get_cuda_driver_version,
+    report_resource_usage,
+    get_accelerator,
+    report_hardware,
 )
-
-SYSTEM = platform.system()
-
-if SYSTEM != "Windows":
-    import resource  # Unix only
-
-from rdkit import rdBase
-import rdkit
-import torch
 
 from reinvent import version, runmodes
 from reinvent.utils import setup_logger
 from reinvent.runmodes.utils import set_torch_device
 from reinvent.runmodes.handler import StageInterruptedControlled
 from .validation import ReinventConfig
-
 
 rdBase.DisableLog("rdApp.*")
 
@@ -96,43 +94,28 @@ def main(args: Any):
 
     logger.info(f"User {getpass.getuser()} on host {platform.node()}")
     logger.info(f"Python version {platform.python_version()}")
-    logger.info(f"PyTorch version {torch.__version__}, " f"git {torch.version.git_version}")
-    logger.info(f"PyTorch compiled with CUDA version {torch.version.cuda}")
+    logger.info(f"PyTorch version {torch.__version__} git {torch.version.git_version}")
+
+    accelerator, accelerator_runtime = get_accelerator()
+    logger.info(f"PyTorch compiled with {accelerator}" + (f" version {accelerator_runtime}" if accelerator_runtime else ""))
+
     logger.info(f"RDKit version {rdkit.__version__}")
     logger.info(f"Platform {platform.platform()}")
 
     if cuda_driver_version := get_cuda_driver_version():
         logger.info(f"CUDA driver version {cuda_driver_version}")
 
-    logger.info(f"Number of PyTorch CUDA devices {torch.cuda.device_count()}")
-
-    if hasattr(val_config, "use_cuda"):
-        logger.warning("'use_cuda' is deprecated, use 'device' instead")
+    if torch.cuda.is_available():
+        logger.info(f"Number of PyTorch CUDA devices {torch.cuda.device_count()}")
 
     device = getattr(val_config, "device", None)
 
     if not device:
-        use_cuda = getattr(val_config, "use_cuda", True)
-
-        if use_cuda:
-            device = "cuda:0"
+        device = "cpu"
 
     actual_device = set_torch_device(args.device, device)
 
-    if hasattr(torch, actual_device.type) and actual_device.type != "cpu":  # "cuda" (incl. ROCm) and "xpu"
-        gpu = getattr(torch, actual_device.type)
-
-        current_device = gpu.current_device()
-        device_name = gpu.get_device_name(current_device)
-        logger.info(f"Using GPU device:{current_device} {device_name}")
-
-        free_memory, total_memory = gpu.mem_get_info()
-        logger.info(
-            f"GPU memory: {free_memory // 1024**2} MiB free, "
-            f"{total_memory // 1024**2} MiB total"
-        )
-    else:
-        logger.info(f"Using CPU {platform.processor()}")
+    report_hardware(actual_device)
 
     seed = args.seed or getattr(val_config, "seed", None)
 
@@ -141,6 +124,7 @@ def main(args: Any):
         logger.info(f"Set seed for all random generators to {seed}")
 
     tb_logdir = getattr(val_config, "tb_logdir", None)
+
     if tb_logdir:
         tb_logdir = os.path.abspath(tb_logdir)
         logger.info(f"Writing TensorBoard summary to {tb_logdir}")
@@ -172,17 +156,7 @@ def main(args: Any):
     except StageInterruptedControlled as e:
         logger.info(f"Requested to terminate: {e.args[0]}")
 
-    if SYSTEM != "Windows":
-        maxrss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-        peak_mem = 0
-
-        if SYSTEM == "Linux":
-            peak_mem = maxrss / 1024
-        elif SYSTEM == "Darwin":  # MacOSX
-            peak_mem = maxrss / 1024**2
-
-        if peak_mem:
-            logger.info(f"Peak main memory usage: {peak_mem:.3f} MiB")
+    report_resource_usage(actual_device)
 
     logger.info(
         f"Finished {version.__progname__} on {datetime.datetime.now().strftime('%Y-%m-%d')}"

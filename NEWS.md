@@ -1,3 +1,22 @@
+New in REINVENT 4.8
+===================
+
+For details see CHANGELOG.md.
+
+* Python 3.11 or later required due to security issues and EOL
+* Reagent metadata from Synthsense reported in CSV
+* Peptide enumeration run mode
+* Support for stereochemistry in classical RNN Reinvent prior
+* Support for Chemprop v2, v1 is still optionally available but only one can be installed at a time
+* Support for Apple GPUs (see PyTorch documentation) using the "mps" device
+* Significantly updated documenation and notebooks
+* Peak GPU performance reporting
+* Log elapsed days if more than one day has passed
+* Simplified TensorBoard writing
+* Massively expanded unit and integration tests
+* Support for uv
+
+
 New in REINVENT 4.7
 ===================
 

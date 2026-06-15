@@ -17,7 +17,7 @@ def collate_fn(encoded_seqs: List[torch.Tensor]) -> torch.Tensor:
 
     max_length = max([seq.size(0) for seq in encoded_seqs])
     collated_arr = torch.zeros(
-        len(encoded_seqs), max_length, dtype=torch.long
+        len(encoded_seqs), max_length, dtype=torch.long, device=encoded_seqs[0].device
     )  # padded with zeroes
 
     for i, seq in enumerate(encoded_seqs):

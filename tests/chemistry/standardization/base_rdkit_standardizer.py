@@ -14,9 +14,9 @@ def classFromArgs(className, argDict):
 
 class BaseRDKitStandardizer(unittest.TestCase):
     def setUp(self):
-        self.raw_config = None if None else self.raw_config
+        self.raw_config = getattr(self, "raw_config", None)
         if not self.raw_config:
-            raise NotImplemented(
+            raise NotImplementedError(
                 "Please, assign value to self.raw_config in the derived test class"
             )
         config = classFromArgs(FilterConfiguration, self.raw_config)

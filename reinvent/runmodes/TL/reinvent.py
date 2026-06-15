@@ -25,6 +25,7 @@ class Reinvent(Learning):
             vocabulary=self.model.vocabulary,
             tokenizer=SMILESTokenizer(),
             randomize=self.randomize_all_smiles,
+            isomeric=self.isomeric,
         )
 
         self.validation_dataset = None
@@ -35,6 +36,7 @@ class Reinvent(Learning):
                 vocabulary=self.model.vocabulary,
                 tokenizer=SMILESTokenizer(),
                 randomize=self.randomize_all_smiles,  # if true much shallower minimum
+                isomeric=self.isomeric,
             )
 
         self.collate_fn = Dataset.collate_fn

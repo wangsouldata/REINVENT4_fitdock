@@ -3,7 +3,6 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-
 config_path = Path(__file__).parent / "integration_tests_config.json"
 if config_path.exists():
     with open(config_path, "r") as f:

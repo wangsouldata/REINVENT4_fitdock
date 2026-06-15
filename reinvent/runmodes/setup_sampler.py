@@ -41,21 +41,12 @@ def setup_sampler(model_type: str, config: dict, agent: ModelAdapter):
             f"with randomized SMILES.  Setting randomize_smiles to False."
         )
 
-    unique_sequences = config.get("unique_sequences", False)
-
-    if unique_sequences:
-        warnings.warn(
-            "Sequence deduplication is deprecated and will be removed in the future.",
-            FutureWarning,
-            stacklevel=2,
-        )
-
     if model_type in TRANSFORMERS:
         sample_strategy = config.get("sample_strategy", "multinomial")
     else:
         sample_strategy = None
 
-    isomeric = False
+    isomeric = config.get("isomeric_smiles", False)
 
     if model_type in TRANSFORMERS:  # for Transformer-based models
         isomeric = True
@@ -71,7 +62,6 @@ def setup_sampler(model_type: str, config: dict, agent: ModelAdapter):
         sample_strategy=sample_strategy,  # needed for Transformer-based models
         isomeric=isomeric,  # needed for Transformer-based models
         randomize_smiles=randomize_smiles,
-        unique_sequences=unique_sequences,
     )
 
     return sampler, batch_size

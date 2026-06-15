@@ -108,7 +108,7 @@ class SmilesAssociatedComponentResults:
         return metadata_names
 
     def __init__(
-        self, component_results: ComponentResults = None, smiles: List[str] = None, data=None
+        self, component_results: ComponentResults = None, smiles: list[srr] = None, data=None
     ):
 
         """Constructor from either ComponentResults and smiles,  or setting th data directly"""

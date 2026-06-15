@@ -11,6 +11,7 @@ from reinvent.runmodes.utils.helpers import set_torch_device
 from tests.test_data import PROPANE, BENZENE, METAMIZOLE, SIMPLE_TOKENS
 
 
+@pytest.mark.needs_gpu
 @pytest.mark.usefixtures("device")
 class TestModelFunctions(unittest.TestCase):
     def setUp(self):
@@ -20,9 +21,8 @@ class TestModelFunctions(unittest.TestCase):
             hash_id=None, hash_id_format=0, model_id=0, origina_data_source="", creation_date=0
         )
         device = torch.device(self.device)
-        self.model = Model(vocabulary, tokenizer, metadata, device=device)
-
         set_torch_device(device)
+        self.model = Model(vocabulary, tokenizer, metadata, device=device)
 
     def test_likelihoods_from_model_1(self):
         likelihoods = self.model.likelihood_smiles([PROPANE, BENZENE])

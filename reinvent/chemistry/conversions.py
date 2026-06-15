@@ -164,15 +164,18 @@ def copy_mol(molecule: Mol) -> Mol:
     return smile_to_mol(mol_to_smiles(molecule))
 
 
-def randomize_smiles(smiles: str) -> str:
+def randomize_smiles(smiles: str, isomeric: bool = False) -> str | None:
     """
-    Returns a random SMILES given a SMILES of a molecule.
-    :param smiles: A smiles string
-    :returns: A random SMILES string of the same molecule or None if the molecule is invalid.
+    Randomize a SMILES.
+
+    :param smiles: SMILES string
+    :param isomeric: whether to write out isomeric SMILES
+    :returns: randomized SMILES string or None if the SMILES is invalid.
     """
+
     mol = MolFromSmiles(smiles)
-    if mol:
-        new_atom_order = list(range(mol.GetNumHeavyAtoms()))
-        random.shuffle(new_atom_order)
-        random_mol = RenumberAtoms(mol, newOrder=new_atom_order)
-        return MolToSmiles(random_mol, canonical=False, isomericSmiles=False)
+
+    if not mol:
+        return None
+
+    return MolToSmiles(mol, canonical=False, isomericSmiles=isomeric, doRandom=True)

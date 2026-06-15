@@ -15,6 +15,7 @@ class SectionParameters(GlobalConfig):
     target_nll_file: str = "target_nll.csv"
     unique_molecules: bool = True
     randomize_smiles: bool = True
+    isomeric_smiles: bool = False
     temperature: float = 1.0
 
 

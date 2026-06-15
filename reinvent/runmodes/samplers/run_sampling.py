@@ -66,10 +66,9 @@ def run_sampling(
 
     # number of smiles to be generated for each input; consistent with batch_size parameter as used in RL
     # different from batch size used in dataloader which affect cuda memory
-    params = parameters.dict()
+    params = parameters.model_dump()
     params["batch_size"] = parameters.num_smiles
     sampler, batch_size = setup_sampler(model_type, params, adapter)
-    sampler.unique_sequences = False
 
     try:
         smiles_input_filename = parameters.smiles_file

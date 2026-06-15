@@ -9,8 +9,11 @@ import numpy as np
 from reinvent.scoring.compute_scores import compute_component_scores, compute_transform
 from reinvent.runmodes.samplers.sampler import validate_smiles
 from reinvent.models.model_factory.sample_batch import SmilesState
-from reinvent_plugins.components.component_results import ComponentResults,SmilesAssociatedComponentResults, SmilesResult
-
+from reinvent_plugins.components.component_results import (
+    ComponentResults,
+    SmilesAssociatedComponentResults,
+    SmilesResult,
+)
 
 SMILIES = [
     "O=C(C)Oc1ccccc1C(=O)O",
@@ -165,7 +168,7 @@ def test_compute_scores_duplicates_not_in_cache():
 
 
 def test_compute_component_scores_with_index_smiles_and_duplicates():
-    smilies = ["CCO", "CCN", "CCO", "CCC"] # duplicates, e.g. same linkers in LinkInvent
+    smilies = ["CCO", "CCN", "CCO", "CCC"]  # duplicates, e.g. same linkers in LinkInvent
     index_smiles = ["CCON", "CCNN", "CCOO", "CCCC"]  # unique, representing full molecules
     filter_mask = np.array([True, True, True, True])
     cache = {}
@@ -185,4 +188,9 @@ def test_compute_component_scores_with_index_smiles_and_duplicates():
         ),
     )
 
-    assert set(component_results.data.keys()) == {"CCON", "CCNN", "CCOO", "CCCC"} # cehck all are scored
+    assert set(component_results.data.keys()) == {
+        "CCON",
+        "CCNN",
+        "CCOO",
+        "CCCC",
+    }  # cehck all are scored

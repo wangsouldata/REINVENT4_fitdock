@@ -4,7 +4,7 @@ import numpy as np
 
 from reinvent_plugins.components.RDKit.comp_similarity import (
     Parameters,
-    TanimotoDistance,
+    TanimotoSimilarity,
 )
 
 
@@ -48,6 +48,6 @@ def test_comp_similarity(smiles, radius, use_counts, use_features, expected_resu
         [use_counts],
         [use_features],
     )
-    td = TanimotoDistance(params)
+    td = TanimotoSimilarity(params)
     results = np.concatenate(td(smiles).scores)
     assert np.allclose(results, expected_results)

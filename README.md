@@ -23,22 +23,21 @@ Requirements
 ------------
 
 REINVENT is being developed on Linux and supports both GPU and CPU.  The Linux
-version is fully validated.  REINVENT on Windows supports GPU and CPU while
-MacOSX supports CPU only, but both platforms are only partially tested and
-therefore support is limited.
+version is fully validated.  REINVENT on Windows and MacOSX support GPU and CPU,
+but Windows is less well tested and therefore support limited.
 
-The code is written in Python 3 (>= 3.10).  The list of
+The code is written in Python 3 (>= 3.11).  The list of
 dependencies can be found in the repository (see also Installation below).
 
 A GPU is not strictly necessary but strongly recommended for performance
 reasons especially for transfer learning and model training.  For Reinforcement
-learning (RL) a GPU is less important becayse most scoring components run on
+learning (RL) a GPU is less important because most scoring components run on
 the CPU.
 
 Note that if no GPU is installed in your computer the code will run on the
-CPU automatically.  REINVENT [supports](https://pytorch.org/get-started/locally/), as of this writing, NVIDIA GPUs, some AMD GPUs and Intel ARC.
-For most design tasks a memory of about 8 GiB for both CPU main memory and
-GPU memory is sufficient.
+CPU automatically.  REINVENT [supports](https://pytorch.org/get-started/locally/), as of this writing, NVIDIA GPUs,
+some AMD GPUs, Intel ARC, and newer Apple GPUs.  For many design tasks a memory
+of about 8 GiB for both CPU main memory and GPU memory is sufficient.
 
 
 Installation
@@ -55,10 +54,16 @@ Installation
     conda create --name reinvent4 python=3.10
     conda activate reinvent4
     ```
-1. Change directory to the repository to install all dependencies.  You will need to set the right processor type, see [PyTorch versions](https://pytorch.org/get-started/locally/). Linux supports CUDA (e.g. "cu126"), AMD ROCm (e.g. "rocm6.4"), Intel XPU ("xpu") and CPU. Windows supports CUDA, XPU and CPU.  MacOSX only supports CPU (use "mac" as processor type!). Optionally, you can select dependencies "openeye" (for ROCS; you need to obtain your own license), "isim" for similarity tracking in TensorBoard or "none" to skip all.  The default is installation of "all" dependencies.  See the help text from the install script for details.
+1. Change directory to the repository to install.  You will need to set the right processor type, see [PyTorch versions](https://pytorch.org/get-started/locally/). Linux supports CUDA (e.g. "cu126"), AMD ROCm (e.g. "rocm6.4"), Intel XPU ("xpu") and CPU. Windows supports CUDA, XPU and CPU.  Newer Apple chips e.g. M5 are supported by PyTorch's MPS backend (use "mac" as processor type). Optionally, you can select dependencies "openeye" (for ROCS; you need to obtain your own license), "chemprop1" for Chemprop v1, "isim" for similarity tracking in TensorBoard or "none" to skip all.  The default is installation of "all" dependencies.  See the help text from the install script for details.
     ```shell
     python install.py --help
-    python install.py cu126  # or rocm6.4, xpu, cpu, mac, etc.
+
+    # install all packages including chemprop2 for CUDA 12.8
+    python install.py cu128  # or rocm6.4, xpu, mac, cpu, etc.
+
+    # if you still want Chemprop v1 (but check https://chemprop.readthedocs.io/en/main/convert_v1_to_v2.html)
+    # python install.py -e cu128 -d all chemprop1  # install all packages with Chemprop v1
+ 
     ```
 1. Test the tool. The installer has added a script `reinvent` to your PATH.
     ```shell
@@ -83,7 +88,7 @@ Installation
 1. Test the tool.
     ```shell
     uv run reinvent --help
-    ```
+
 
 Prior models
 ------------
@@ -110,6 +115,30 @@ depending on the research problem you are trying to address.  There is
 additional documentation in `configs/` in several `*.md` files with
 instructions on how to configure the TOML file.  Internal priors can be
 referenced with a dot notation (see `reinvent/prior_registry.py`).
+
+
+CLI Reference
+-------------
+
+Run `reinvent --help` for a full list of options.
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `FILE` | Input configuration file (positional) | — |
+| `-f`, `--config-format` | Force config file format: toml, json, yaml | toml |
+| `-d`, `--device` | Torch device: cuda, cpu. Overwrites config file setting | — |
+| `-l`, `--log-filename` | Write log to file instead of stderr | stderr |
+| `--log-level` | Log verbosity level (see below) | info |
+| `-s`, `--seed` | Random seed for reproducibility | — |
+| `--dotenv-filename` | Dotenv file for scoring component environment setup | — |
+| `--enable-rdkit-log-levels` | Enable RDKit log levels: all, error, warning, info, debug | — |
+| `-V`, `--version` | Print version and exit | — |
+
+**Log levels** (from most to least verbose): `verbose`, `debug`, `info`, `warning`, `error`, `critical`.
+
+- `verbose` — highest detail, includes per-SMILES/state output after sampling and full JSON payloads. Use for deep debugging.
+- `debug` — standard diagnostic output: configuration details, internal state summaries.
+- `info` — normal operation: progress, milestones, results (default).
 
 
 Tutorials / `Jupyter` notebooks

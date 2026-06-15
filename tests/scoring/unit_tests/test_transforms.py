@@ -32,7 +32,14 @@ def test_double_sigmoid(low, high, coef_div, coef_si, coef_se):
     assert np.all(results >= 0.0)
 
 
-@pytest.mark.parametrize("low, high, k", [(-5.0, 5.0, 1.0)])
+@pytest.mark.parametrize(
+    "low, high, k",
+    [
+        (-5.0, 5.0, 1.0),
+        (0.0, 10.0, 0.5),  # positive range, gentler slope
+        (-10.0, 0.0, 2.0),  # negative range, steeper slope
+    ],
+)
 def test_reverse_sigmoid(low, high, k):
     from reinvent.scoring.transforms.sigmoids import Parameters
 
@@ -50,7 +57,14 @@ def test_reverse_sigmoid(low, high, k):
     assert np.all(results >= 0.0)
 
 
-@pytest.mark.parametrize("low, high, k", [(-5.0, 5.0, 1.0)])
+@pytest.mark.parametrize(
+    "low, high, k",
+    [
+        (-5.0, 5.0, 1.0),
+        (0.0, 10.0, 0.5),  # positive range, gentler slope
+        (-10.0, 0.0, 2.0),  # negative range, steeper slope
+    ],
+)
 def test_sigmoid(low, high, k):
     from reinvent.scoring.transforms.sigmoids import Parameters
 
@@ -79,7 +93,14 @@ def test_value_mapping(mapping):
     assert np.all(results == [1, 1, 2, 5, 2, 5])
 
 
-@pytest.mark.parametrize("low, high", [(-5, 3)])
+@pytest.mark.parametrize(
+    "low, high",
+    [
+        (-5, 3),
+        (0, 0),  # degenerate: single-point boundary
+        (10, 20),  # both positive
+    ],
+)
 def test_left_step(low, high):
     from reinvent.scoring.transforms.steps import Parameters
 
@@ -94,7 +115,14 @@ def test_left_step(low, high):
     assert np.all(results == (data <= low))
 
 
-@pytest.mark.parametrize("low, high", [(-5, 3)])
+@pytest.mark.parametrize(
+    "low, high",
+    [
+        (-5, 3),
+        (0, 0),  # degenerate: single-point boundary
+        (-20, 10),  # wide range
+    ],
+)
 def test_right_step(low, high):
     from reinvent.scoring.transforms.steps import Parameters
 
@@ -109,7 +137,14 @@ def test_right_step(low, high):
     assert np.all(results == (data >= high))
 
 
-@pytest.mark.parametrize("low, high", [(-5, 3)])
+@pytest.mark.parametrize(
+    "low, high",
+    [
+        (-5, 3),
+        (-20, 20),  # all data in range
+        (5, 5),  # degenerate: only exact value passes
+    ],
+)
 def test_step(low, high):
     from reinvent.scoring.transforms.steps import Parameters
 

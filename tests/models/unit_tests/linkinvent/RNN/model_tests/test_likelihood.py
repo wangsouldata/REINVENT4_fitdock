@@ -9,6 +9,7 @@ from tests.test_data import ETHANE, HEXANE, PROPANE, BUTANE
 from tests.models.unit_tests.linkinvent.RNN.fixtures import mocked_linkinvent_model
 
 
+@pytest.mark.needs_gpu
 @pytest.mark.usefixtures("device")
 class TestLinkInventLikelihoodSMILES(unittest.TestCase):
     def setUp(self):

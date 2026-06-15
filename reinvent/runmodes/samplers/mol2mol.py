@@ -7,7 +7,7 @@ import logging
 from rdkit import Chem
 import torch.utils.data as tud
 
-from .sampler import Sampler, validate_smiles, remove_duplicate_sequences
+from .sampler import Sampler, validate_smiles
 from . import params
 from reinvent.models.transformer.core.dataset.dataset import Dataset
 from reinvent.models.transformer.core.vocabulary import SMILESTokenizer
@@ -63,9 +63,6 @@ class Mol2MolSampler(Sampler):
                 sequences.append(batch_row)
 
         sampled = SampleBatch.from_list(sequences)
-
-        if self.unique_sequences:
-            sampled = remove_duplicate_sequences(sampled, is_mol2mol=True)
 
         mols = [
             Chem.MolFromSmiles(smiles, sanitize=False) if smiles else None

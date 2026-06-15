@@ -159,10 +159,11 @@ class Scorer:
             fragment_args = [fragments] * number_components
             smilies_args = [smilies] * number_components
             valid_mask_args = [valid_mask] * number_components
+            use_pumas = [self.use_pumas] * number_components
 
             completed_components = pool.starmap(
                 compute_component_score,
-                list(zip(self.components.scorers, fragment_args, smilies_args, valid_mask_args, self.use_pumas)),
+                list(zip(self.components.scorers, fragment_args, smilies_args, valid_mask_args, use_pumas)),
             )
         else:
             for component in self.components.scorers:

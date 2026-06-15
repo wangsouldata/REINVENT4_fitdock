@@ -32,6 +32,7 @@ def test_comp_rdkit_descriptors():
         assert np.allclose(results.scores[0], result)
 
 
-@pytest.mark.xfail
 def test_comp_rdkit_descriptors_unknown_descriptor():
     params = Parameters(["unknown"])
+    with pytest.raises(ValueError, match="unknown descriptor"):
+        RDKitDescriptors(params)

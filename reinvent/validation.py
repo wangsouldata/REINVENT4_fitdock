@@ -12,7 +12,6 @@ class GlobalConfig(BaseModel):
 class ReinventConfig(GlobalConfig):
     run_type: str
     device: str = "cpu"
-    use_cuda: Optional[bool] = Field(True, deprecated="use 'device' instead")
     tb_logdir: Optional[str] = None
     json_out_config: Optional[str] = None
     seed: Optional[int] = None

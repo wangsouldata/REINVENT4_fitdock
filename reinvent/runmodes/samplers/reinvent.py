@@ -5,7 +5,7 @@ import logging
 
 from rdkit import Chem
 
-from .sampler import Sampler, remove_duplicate_sequences, validate_smiles
+from .sampler import Sampler, validate_smiles
 from .params import SAMPLE_BATCH_SIZE
 from ...models.model_factory.sample_batch import SampleBatch
 
@@ -36,14 +36,11 @@ class ReinventSampler(Sampler):
         sampled = SampleBatch.from_list(sequences)
         sampled.items1 = None
 
-        if self.unique_sequences:
-            sampled = remove_duplicate_sequences(sampled, is_reinvent=True)
-
         mols = [
             Chem.MolFromSmiles(smiles, sanitize=False) if smiles else None
             for smiles in sampled.output
         ]
 
-        sampled.smilies, sampled.states = validate_smiles(mols, sampled.output)
+        sampled.smilies, sampled.states = validate_smiles(mols, sampled.output, isomeric=self.isomeric)
 
         return sampled

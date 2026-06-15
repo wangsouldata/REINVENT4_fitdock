@@ -7,7 +7,7 @@ import logging
 import torch.utils.data as tud
 from rdkit import Chem
 
-from .sampler import Sampler, validate_smiles, remove_duplicate_sequences
+from .sampler import Sampler, validate_smiles
 from . import params
 from reinvent.models.linkinvent.dataset.dataset import Dataset
 from reinvent.models.model_factory.sample_batch import SampleBatch
@@ -72,9 +72,6 @@ class LinkinventSampler(Sampler):
                 sequences.append(batch_row)
 
         sampled = SampleBatch.from_list(sequences)
-
-        if self.unique_sequences:
-            sampled = remove_duplicate_sequences(sampled)
 
         mols = self._join_fragments(sampled)
 

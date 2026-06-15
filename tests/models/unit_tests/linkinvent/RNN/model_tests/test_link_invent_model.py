@@ -12,6 +12,7 @@ from tests.test_data import WARHEAD_PAIR
 from tests.models.unit_tests.linkinvent.RNN.fixtures import mocked_linkinvent_model
 
 
+@pytest.mark.needs_gpu
 @pytest.mark.usefixtures("device")
 class TestLinkInventModel(unittest.TestCase):
     def setUp(self):

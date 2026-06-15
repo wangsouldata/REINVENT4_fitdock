@@ -7,6 +7,7 @@ from __future__ import annotations
 
 __all__ = [
     "CsvFormatter",
+    "VERBOSE",
     "setup_logger",
     "enable_rdkit_log",
     "setup_responder",
@@ -19,7 +20,20 @@ import os
 import sys
 import csv
 import io
+from datetime import datetime
 import logging
+
+# Custom log level below DEBUG (10) for high-detail per-item logging
+VERBOSE = 5
+logging.addLevelName(VERBOSE, "VERBOSE")
+
+
+def _verbose(self, message, *args, **kwargs):
+    if self.isEnabledFor(VERBOSE):
+        self._log(VERBOSE, message, args, **kwargs)
+
+
+logging.Logger.verbose = _verbose
 from logging.config import dictConfig, fileConfig
 from typing import List, Mapping, Optional
 
@@ -51,6 +65,27 @@ class CsvFormatter(logging.Formatter):
         self.output.truncate(0)
         self.output.seek(0)
         return data.strip()
+
+
+START_TIME = datetime.now()
+
+
+class DaysSinceStartFormatter(logging.Formatter):
+    """
+    A custom formatter that calculates and includes the number of days
+    elapsed since the START_TIME in the log record.
+    """
+
+    def format(self, record):
+        time_elapsed = datetime.now() - START_TIME
+        days_elapsed = int(time_elapsed.total_seconds() // (24 * 3600))
+
+        if days_elapsed > 0:
+            record.daysSinceStart = str(days_elapsed) + "-"
+        else:
+            record.daysSinceStart = ""
+
+        return super().format(record)
 
 
 def setup_logger(
@@ -102,12 +137,12 @@ def setup_logger(
     handler.setLevel(level)
 
     if debug:
-        log_format = "%(asctime)s %(module)s.%(funcName)s +%(lineno)s: %(levelname)-4s %(message)s"
+        log_format = "%(daysSinceStart)s%(asctime)s %(module)s.%(funcName)s +%(lineno)s: %(levelname)-4s %(message)s"
     else:
-        log_format = "%(asctime)s <%(levelname)-4.4s> %(message)s"
+        log_format = "%(daysSinceStart)s%(asctime)s <%(levelname)-4.4s> %(message)s"
 
     if not formatter:
-        formatter = logging.Formatter(
+        formatter = DaysSinceStartFormatter(
             fmt=log_format,
             datefmt="%H:%M:%S",
         )
@@ -196,7 +231,7 @@ class RemoteJSONReporter:
 
         json_msg = json.dumps(record, cls=NanInfEncoder, indent=2)
 
-        logger.debug(
+        logger.verbose(
             "Data sent to {url}\n\n{headers}\n\n{json_data}".format(
                 url=self.url,
                 headers="\n".join(f"{k}: {v}" for k, v in self.headers.items()),

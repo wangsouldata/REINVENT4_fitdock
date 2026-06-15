@@ -35,9 +35,7 @@ def mocked_pepinvent_model():
 
 
 def mocked_vocabulary():
-    smiles_list = [
-        PEPINVENT_INPUT1, PEPINVENT_INPUT2, PEPINVENT_INPUT3
-    ]
+    smiles_list = [PEPINVENT_INPUT1, PEPINVENT_INPUT2, PEPINVENT_INPUT3]
     vocabulary = build_vocabulary(smiles_list)
 
     return vocabulary

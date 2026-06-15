@@ -7,15 +7,18 @@ import torch.utils.data as tud
 from reinvent.models.transformer.core.dataset.dataset import Dataset
 from reinvent.models.transformer.core.enums.sampling_mode_enum import SamplingModesEnum
 from reinvent.models.transformer.core.vocabulary import SMILESTokenizer
+from reinvent.runmodes.utils.helpers import set_torch_device
 from tests.test_data import BENZENE, TOLUENE, ANILINE
 from tests.models.unit_tests.mol2mol.fixtures import mocked_mol2mol_model
 
 
+@pytest.mark.needs_gpu
 @pytest.mark.usefixtures("device")
 class TestModelSampling(unittest.TestCase):
     def setUp(self):
 
         device = torch.device(self.device)
+        set_torch_device(device)
         self._model = mocked_mol2mol_model()
         self._model.network.to(device)
         self._model.device = device

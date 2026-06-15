@@ -11,6 +11,7 @@ from tests.test_data import ETHANE, HEXANE, PROPANE, BUTANE
 from tests.models.unit_tests.mol2mol.fixtures import mocked_vocabulary
 
 
+@pytest.mark.needs_gpu
 @pytest.mark.usefixtures("device")
 class TestPairedDataset(unittest.TestCase):
     def setUp(self):

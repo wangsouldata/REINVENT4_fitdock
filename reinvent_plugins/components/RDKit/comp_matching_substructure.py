@@ -30,23 +30,29 @@ class Parameters:
     endpoint.
     """
 
-    smarts: List[str]
+    smarts: List[str | List[str]]
     use_chirality: List[bool]
 
 
 @add_tag("__component", "penalty")
 class MatchingSubstructure:
     def __init__(self, params: Parameters):
-        self.patterns = []
+        self.patterns_per_endpoint = []
         self.use_chirality = params.use_chirality
 
         for smarts in params.smarts:
-            pattern = Chem.MolFromSmarts(smarts)
+            patterns = []
 
-            if pattern:
-                self.patterns.append(pattern)
+            if isinstance(smarts, list):
+                for smart in smarts:
+                    patterns.append(Chem.MolFromSmarts(smart))
+            else:
+                patterns = [Chem.MolFromSmarts(smarts)]
 
-        if not self.patterns:
+            if patterns:
+                self.patterns_per_endpoint.append(patterns)
+
+        if not self.patterns_per_endpoint:
             raise ValueError(f"{__name__}: no valid SMARTS patterns found")
 
         self.number_of_endpoints = len(params.smarts)
@@ -55,9 +61,13 @@ class MatchingSubstructure:
     def __call__(self, mols: List[Chem.Mol]) -> np.array:
         scores = []
 
-        for pattern, use_chirality in zip(self.patterns, self.use_chirality):
+        for patterns, use_chirality in zip(self.patterns_per_endpoint, self.use_chirality):
             match = [
-                any([mol.HasSubstructMatch(pattern, useChirality=use_chirality)]) for mol in mols
+                any(
+                    mol.HasSubstructMatch(pattern, useChirality=use_chirality)
+                    for pattern in patterns
+                )
+                for mol in mols
             ]
 
             scores.append(0.5 * (1.0 + np.array(match)))

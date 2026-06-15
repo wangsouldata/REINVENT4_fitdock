@@ -193,8 +193,8 @@ class Maize:
         self.workflow = os.path.abspath(params.workflow[0])
         self.debug = params.debug[0]
         self.keep = params.keep[0]
-        self.log = os.path.abspath(params.log[0])
-        self.config = os.path.abspath(params.config[0])
+        self.log = os.path.abspath(params.log[0]) if params.log[0] is not None else None
+        self.config = os.path.abspath(params.config[0]) if params.config[0] is not None else None
         self.skip_on_failure = params.skip_on_failure[0]
         self.skip_normalize = params.skip_normalize[0]
         self.pass_fragments = params.pass_fragments[0]
@@ -258,7 +258,7 @@ class Maize:
                     for _ in self.properties:
                         all_scores.append(np.full(len(smilies), 0.0, dtype=np.float32))
 
-                    return ComponentResults(scores=all_scores)
+                    return ComponentResults(scores=all_scores, metadata={"Maize ID": [None] * len(smilies)})
                 raise
 
             data = wait_for_output(out_filename)
@@ -272,4 +272,5 @@ class Maize:
                 scores = np.nan_to_num(np.array(endpoint_scores))
                 all_scores.append(scores)
 
-        return ComponentResults(scores=all_scores, metadata={"Maize ID": data["names"]})
+        maize_ids = data.get("names", [None] * len(smilies))
+        return ComponentResults(scores=all_scores, metadata={"Maize ID": maize_ids})

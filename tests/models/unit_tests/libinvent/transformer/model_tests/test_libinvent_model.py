@@ -9,9 +9,15 @@ from reinvent.models.transformer.core.enums.sampling_mode_enum import SamplingMo
 from reinvent.models.transformer.core.vocabulary import SMILESTokenizer
 from reinvent.runmodes.utils import set_torch_device
 from tests.models.unit_tests.libinvent.transformer.fixtures import mocked_libinvent_model
-from tests.test_data import SCAFFOLD_SINGLE_POINT, SCAFFOLD_DOUBLE_POINT, SCAFFOLD_TRIPLE_POINT, SCAFFOLD_QUADRUPLE_POINT
+from tests.test_data import (
+    SCAFFOLD_SINGLE_POINT,
+    SCAFFOLD_DOUBLE_POINT,
+    SCAFFOLD_TRIPLE_POINT,
+    SCAFFOLD_QUADRUPLE_POINT,
+)
 
 
+@pytest.mark.needs_gpu
 @pytest.mark.usefixtures("device")
 class TestLibInventModel(unittest.TestCase):
     def setUp(self):
@@ -33,7 +39,12 @@ class TestLibInventModel(unittest.TestCase):
         smiles_list = [SCAFFOLD_SINGLE_POINT, SCAFFOLD_DOUBLE_POINT, SCAFFOLD_TRIPLE_POINT]
         self.data_loader_3 = self.initialize_dataloader(smiles_list)
 
-        smiles_list = [SCAFFOLD_SINGLE_POINT, SCAFFOLD_DOUBLE_POINT, SCAFFOLD_TRIPLE_POINT, SCAFFOLD_QUADRUPLE_POINT]
+        smiles_list = [
+            SCAFFOLD_SINGLE_POINT,
+            SCAFFOLD_DOUBLE_POINT,
+            SCAFFOLD_TRIPLE_POINT,
+            SCAFFOLD_QUADRUPLE_POINT,
+        ]
         self.data_loader_4 = self.initialize_dataloader(smiles_list)
 
     def initialize_dataloader(self, data):

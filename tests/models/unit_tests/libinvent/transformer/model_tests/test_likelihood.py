@@ -3,8 +3,16 @@ import unittest
 
 from reinvent.models import LibinventTransformerAdapter, SampledSequencesDTO
 from tests.models.unit_tests.libinvent.transformer.fixtures import mocked_libinvent_model
-from tests.test_data import SCAFFOLD_SINGLE_POINT, SCAFFOLD_DOUBLE_POINT, SCAFFOLD_TRIPLE_POINT, \
-    SCAFFOLD_QUADRUPLE_POINT, DECORATION_NO_SUZUKI, TWO_DECORATIONS_ONE_SUZUKI, THREE_DECORATIONS, FOUR_DECORATIONS
+from tests.test_data import (
+    SCAFFOLD_SINGLE_POINT,
+    SCAFFOLD_DOUBLE_POINT,
+    SCAFFOLD_TRIPLE_POINT,
+    SCAFFOLD_QUADRUPLE_POINT,
+    DECORATION_NO_SUZUKI,
+    TWO_DECORATIONS_ONE_SUZUKI,
+    THREE_DECORATIONS,
+    FOUR_DECORATIONS,
+)
 
 
 @pytest.mark.usefixtures("device")

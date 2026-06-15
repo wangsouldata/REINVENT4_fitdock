@@ -6,20 +6,19 @@ FIXME: about everything
 __all__ = ["read_smiles_csv_file", "read_config", "write_json"]
 import sys
 import io
+import tomllib
 from pathlib import Path
 import csv
 import json
 import yaml
 from typing import List, Tuple, Union, Optional, Callable
 
-import tomli
 from rdkit import Chem
 
 from reinvent.datapipeline.filters.regex import SMILES_TOKENS_REGEX
 
-
 smiles_func = Callable[[str], str]
-FMT_CONVERT = {"toml": tomli, "json": json, "yaml": yaml}
+FMT_CONVERT = {"toml": tomllib, "json": json, "yaml": yaml}
 INPUT_FORMAT_CHOICES = tuple(FMT_CONVERT.keys())
 
 
